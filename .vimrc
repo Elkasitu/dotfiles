@@ -11,7 +11,6 @@ endif
 call plug#begin('~/.local/share/vim/plugged')
 
 Plug 'flazz/vim-colorschemes'
-Plug 'sheerun/vim-polyglot'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
@@ -25,12 +24,14 @@ Plug 'junegunn/fzf.vim'
 Plug 'valloric/listtoggle'
 Plug 'tpope/vim-fugitive'
 Plug 'brooth/far.vim'
-Plug 'hdima/python-syntax'
 Plug 'majutsushi/tagbar'
 Plug 'sjl/gundo.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'oblitum/YouCompleteMe', {'do': 'python ./install.py --system-libclang --all'}
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'vim-python/python-syntax'
+Plug 'rust-lang/rust.vim'
+Plug 'pangloss/vim-javascript'
 
 call plug#end()
 
