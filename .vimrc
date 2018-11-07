@@ -23,14 +23,14 @@ Plug 'neomake/neomake'
 Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'valloric/listtoggle'
-Plug 'yuttie/comfortable-motion.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'brooth/far.vim'
-Plug 'davidhalter/jedi-vim'
 Plug 'hdima/python-syntax'
 Plug 'majutsushi/tagbar'
 Plug 'sjl/gundo.vim'
 Plug 'scrooloose/nerdtree'
+Plug 'oblitum/YouCompleteMe', {'do': 'python ./install.py --system-libclang --all'}
+Plug 'ludovicchabant/vim-gutentags'
 
 call plug#end()
 
@@ -57,6 +57,8 @@ set colorcolumn=80,100
 set mouse=a
 set cursorline
 set formatoptions+=j
+set statusline+=%{gutentags#statusline()}
+set wildignore=*.pyc
 
 
 " Functions
@@ -71,9 +73,22 @@ function! NumberToggle() abort
 endfunc
 
 
+" Commands
+" Ag command preview
+command! -bang -nargs=* Ag
+    \ call fzf#vim#ag(<q-args>,
+    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
+    \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
+    \                 <bang>0)
+
+" Files preview
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+
 " Appearance
 syntax on
-colorscheme jellybeans
+colorscheme gruvbox
 set background=dark
 
 " Global variables
@@ -82,6 +97,20 @@ let g:python3_host_prog = '/home/elkasitu/.pyenv/versions/3.5.4/bin/python'
 
 " Fzf
 let g:fzf_buffers_jump = 1
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 
 " Airline
 let g:airline#extensions#tabline#enabled = 1
@@ -112,15 +141,17 @@ let g:neomake_python_enabled_makers = ['flake8']
 " GitGutter
 set signcolumn=yes
 
-" Jedi-vim
-let g:jedi#show_call_signatures = "1"
-let g:jedi#goto_command = "<leader>d"
-let g:jedi#goto_assignments_command = ""
-let g:jedi#goto_definitions_command = ""
-let g:jedi#documentation_command = "<leader>k"
-let g:jedi#usages_command = "<leader>u"
-let g:jedi#completions_command = "<C-space>"
-let g:jedi#rename_command = "<leader>x"
+" YouCompleteMe
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_show_diagnostics_ui = 0
+
+" Gutentags
+if !isdirectory($HOME."/.vim/tags")
+    call mkdir($HOME."/.vim/tags", "", 0770)
+endif
+let g:gutentags_cache_dir = '~/.vim/tags'
+let g:gutentags_ctags_exclude = ['*.js']
 
 " Misc
 let mapleader = "-"
@@ -138,7 +169,7 @@ autocmd BufWritePost * Neomake
 
 " Mappings
 " FZF
-nnoremap <C-p>a :Ag
+nnoremap <C-p>a :Ag 
 nnoremap <C-p>b :Buffers<CR>
 nnoremap <C-p>c :Commands<CR>
 nnoremap <C-p>f :Files<CR>
@@ -149,10 +180,6 @@ nnoremap <C-p>/ :History/<CR>
 nnoremap <C-p>l :BLines<CR>
 nnoremap <C-p>m :Marks<CR>
 nnoremap <C-p>t :Tags<CR>
-
-" Comfortable Motion
-noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(40)<CR>
-noremap <silent> <ScrollWheelUp> :call comfortable_motion#flick(-40)<CR>
 
 " Tagbar
 nnoremap <F8> :TagbarToggle<CR>
