@@ -9,7 +9,6 @@
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
     . /usr/share/bash-completion/bash_completion
 
-set -o vi                   # Set vi mode
 stty -ixon                  # Disable that bullshit that disables all input
 
 # Env variables
@@ -60,3 +59,15 @@ parse_git_branch() {
 PS1='\[\033[01;32m\]\u@\h\[\033[01;34m\] \W\[\033[33m\]$(parse_git_branch)\[\033[00m\] $ '
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+export PYENV_ROOT="$HOME/.pyenv"
+export PATH="$PYENV_ROOT/bin:$PATH"
+
+if command -v pyenv 1>/dev/null 2>&1; then
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi
+
+export GPG_TTY=$(tty)
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/.bin/scripts:$PATH"
