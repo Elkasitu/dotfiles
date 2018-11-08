@@ -6,7 +6,6 @@ if empty(glob('~/.vim/autoload/plug.vim'))
     au VimEnter * PlugInstall
 endif
 
-
 " Plugins
 call plug#begin('~/.local/share/vim/plugged')
 
@@ -25,7 +24,7 @@ Plug 'valloric/listtoggle'
 Plug 'tpope/vim-fugitive'
 Plug 'brooth/far.vim'
 Plug 'majutsushi/tagbar'
-Plug 'sjl/gundo.vim'
+Plug 'simnalamburt/vim-mundo'
 Plug 'scrooloose/nerdtree'
 Plug 'oblitum/YouCompleteMe', {'do': 'python ./install.py --system-libclang --all'}
 Plug 'ludovicchabant/vim-gutentags'
@@ -186,7 +185,7 @@ nnoremap <C-p>t :Tags<CR>
 nnoremap <F8> :TagbarToggle<CR>
 
 " Gundo
-nnoremap <F5> :GundoToggle<CR>
+nnoremap <F5> :MundoToggle<CR>
 
 " NERDTree
 nnoremap <F3> :NERDTreeToggle<CR>
