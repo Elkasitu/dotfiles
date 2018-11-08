@@ -59,6 +59,7 @@ set cursorline
 set formatoptions+=j
 set statusline+=%{gutentags#statusline()}
 set wildignore=*.pyc
+set updatetime=100
 
 
 " Functions
@@ -198,3 +199,16 @@ nnoremap <leader>r :call NumberToggle()<CR>
 nnoremap <leader>p :bp<CR>
 nnoremap <leader>n :bn<CR>
 nnoremap <space> za
+
+" Copy/Cut/Paste from XOrg's CLIPBOARD buffer
+" requires vim compiled with the +clipboard flag
+if has('clipboard')
+    vnoremap <C-c> "+y
+    vnoremap <C-x> "+d
+    nnoremap <C-c> "+yy
+    nnoremap <C-x> "+dd
+    nnoremap <C-v> "+p
+endif
+
+" Make d/dd send contents to the black hole register by default
+nnoremap d "_d
