@@ -13,6 +13,7 @@ export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.bin/scripts:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
+export FZF_DEFAULT_OPTS="--bind ctrl-a:select-all;ctrl-d:deselect-all;ctrl-t:toggle-all"
 
 # Use bash-completion, if available
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
