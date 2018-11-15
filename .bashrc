@@ -68,7 +68,7 @@ parse_git_branch() {
 # Fancy PS1 with powerline-shell
 # TODO: Manage auto-install of powerline-shell
 _update_ps1() {
-    PS1=$(powerline-shell $?)
+    PS1=$(powerline-shell 2>/dev/null)
 }
 
 if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
