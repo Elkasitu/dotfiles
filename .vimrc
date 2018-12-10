@@ -26,7 +26,6 @@ Plug 'majutsushi/tagbar'
 Plug 'simnalamburt/vim-mundo'
 Plug 'scrooloose/nerdtree'
 Plug 'oblitum/YouCompleteMe', {'do': 'python ./install.py --system-libclang --all'}
-Plug 'ludovicchabant/vim-gutentags'
 Plug 'vim-python/python-syntax'
 Plug 'rust-lang/rust.vim'
 Plug 'pangloss/vim-javascript'
@@ -56,7 +55,6 @@ set colorcolumn=80,100
 set mouse=a
 set cursorline
 set formatoptions+=j
-set statusline+=%{gutentags#statusline()}
 set wildignore=*.pyc
 set updatetime=100
 
@@ -144,14 +142,8 @@ set signcolumn=yes
 " YouCompleteMe
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_show_diagnostics_ui = 0
-
-" Gutentags
-if !isdirectory($HOME."/.vim/tags")
-    call mkdir($HOME."/.vim/tags", "", 0770)
-endif
-let g:gutentags_cache_dir = '~/.vim/tags'
-let g:gutentags_ctags_exclude = ['*.js']
 
 " Misc
 let mapleader = "-"

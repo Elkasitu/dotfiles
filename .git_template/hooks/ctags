@@ -1,0 +1,14 @@
+#!/bin/sh
+
+# this script will automatically generate ctags for git projects and store
+# the ctag files inside the .git folder of the corresponding git project using
+# git hooks, good for fuzzy-finding function/class definitions.
+# from https://tbaggery.com/2011/08/08/effortless-ctags-with-git.html
+
+set -e
+dir="`git rev-parse --git-dir`"
+trap 'rm -f "$dir/$$.tags"' EXIT
+git ls-files | \
+    ctags --tag-relative=yes -L - -f "$dir/$$.tags" --languages=python \
+    --fields=+l
+mv "$dir/$$.tags" "$dir/tags"
