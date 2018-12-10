@@ -86,6 +86,7 @@ command! -bang -nargs=? -complete=dir Files
 
 " Appearance
 syntax on
+autocmd ColorScheme * highlight Crap ctermbg=red guibg=red
 colorscheme gruvbox
 set background=dark
 
@@ -156,12 +157,24 @@ set langmenu=en
 
 
 " Autocmd
+" Lint
 autocmd BufWritePost * Neomake
+
+" Match trailing WS
+match Crap /\s\+$/
+autocmd BufWinEnter * match Crap /\s\+$/
+" Git conflicts
+autocmd BufWinEnter * match Crap '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
+" More trailing WS
+autocmd InsertEnter * match Crap /\s\+\%#\@<!$/
+autocmd InsertLeave * match Crap /\s\+$/
+autocmd BufWinLeave * call clearmatches()
+
 
 
 " Mappings
 " FZF
-nnoremap <C-p>a :Ag 
+nnoremap <C-p>a :Ag
 nnoremap <C-p>b :Buffers<CR>
 nnoremap <C-p>c :Commands<CR>
 nnoremap <C-p>f :Files<CR>
