@@ -6,7 +6,7 @@ XTerm.ttyModes: erase ^?
 XTerm.vt100.saveLines: 4096
 XTerm.vt100.selectToClipboard: true
 !XTerm.vt100.reverseVideo: true
-XTerm.vt100.faceName: Knack Nerd Font Mono:style=Regular:size=10
+XTerm.vt100.faceName: Iosevka Nerd Font Mono:style=Regular:size=10
 ! hard contrast: *background: #1d2021
 *background: #282828
 ! soft contrast: *background: #32302f
