@@ -16,7 +16,6 @@ Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-surround'
 Plug 'raimondi/delimitmate'
-Plug 'neomake/neomake'
 Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'valloric/listtoggle'
@@ -25,10 +24,10 @@ Plug 'brooth/far.vim'
 Plug 'majutsushi/tagbar'
 Plug 'simnalamburt/vim-mundo'
 Plug 'scrooloose/nerdtree'
-Plug 'oblitum/YouCompleteMe', {'do': 'python ./install.py --system-libclang --all'}
 Plug 'vim-python/python-syntax'
 Plug 'rust-lang/rust.vim'
 Plug 'pangloss/vim-javascript'
+Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 
 call plug#end()
 
@@ -133,18 +132,14 @@ let g:airline_symbols.paste = 'Þ'
 let g:airline_symbols.paste = '∥'
 let g:airline_symbols.whitespace = 'Ξ'
 
-" Neomake
-let g:neomake_python_flake8_maker = {'args': ['--max-line-length=99']}
-let g:neomake_python_enabled_makers = ['flake8']
-
 " GitGutter
 set signcolumn=yes
 
-" YouCompleteMe
-let g:ycm_autoclose_preview_window_after_insertion = 1
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_show_diagnostics_ui = 0
+" LanguageClient
+let g:LanguageClient_serverCommands = {
+    \ 'python': ['pyls'],
+    \ }
+set completefunc=LanguageClient#complete
 
 " Misc
 let mapleader = "-"
@@ -157,9 +152,6 @@ set langmenu=en
 
 
 " Autocmd
-" Lint
-autocmd BufWritePost * Neomake
-
 " Match trailing WS
 match Crap /\s\+$/
 autocmd BufWinEnter * match Crap /\s\+$/
@@ -169,7 +161,6 @@ autocmd BufWinEnter * match Crap '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 autocmd InsertEnter * match Crap /\s\+\%#\@<!$/
 autocmd InsertLeave * match Crap /\s\+$/
 autocmd BufWinLeave * call clearmatches()
-
 
 
 " Mappings
@@ -194,9 +185,6 @@ nnoremap <F5> :MundoToggle<CR>
 
 " NERDTree
 nnoremap <F3> :NERDTreeToggle<CR>
-
-" Neomake
-nnoremap <leader>m :Neomake<CR>
 
 " Misc
 nnoremap <leader>r :call NumberToggle()<CR>
