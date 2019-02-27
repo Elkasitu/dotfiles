@@ -28,6 +28,7 @@ Plug 'vim-python/python-syntax'
 Plug 'rust-lang/rust.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
+Plug 'neovimhaskell/haskell-vim'
 
 call plug#end()
 
