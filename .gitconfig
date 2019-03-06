@@ -1,10 +1,10 @@
 [include]
     path = .gitprivate
 [core]
-	editor = vim
+	editor = nvim
 	excludesFile = ~/.globalgitconfig
 [commit]
-	gpgsign = true
+    gpgsign = true
 	verbose = true
 [gpg]
 	program = gpg2
@@ -13,11 +13,11 @@
 [merge]
     tool = fugitive
 [mergetool "fugitive"]
-    cmd = vim -f -c "Gdiff" "$MERGED"
+    cmd = nvim -f -c "Gdiff" "$MERGED"
 [diff]
     tool = vimdiff
 [difftool "vimdiff"]
-    cmd = vim -d $LOCAL $REMOTE
+    cmd = nvim -d $LOCAL $REMOTE
 [alias]
 	co = checkout
 	ci = commit

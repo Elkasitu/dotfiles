@@ -87,7 +87,7 @@ command! -bang -nargs=? -complete=dir Files
 " Appearance
 syntax on
 autocmd ColorScheme * highlight Crap ctermbg=red guibg=red
-colorscheme gruvbox
+colorscheme dracula
 set background=dark
 
 " Global variables

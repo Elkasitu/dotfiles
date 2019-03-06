@@ -5,28 +5,30 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
+# Load fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
-# Environment variables and such
+# Environment variables
 export GPG_TTY=$(tty)
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/.bin/scripts:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export FZF_DEFAULT_OPTS="--bind ctrl-a:select-all;ctrl-d:deselect-all;ctrl-t:toggle-all"
+export LC_ALL="en_GB.UTF-8"
+export EDITOR=nvim
 
 # Use bash-completion, if available
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
     . /usr/share/bash-completion/bash_completion
 
-stty -ixon                  # Disable that bullshit that disables all input
-
-# Env variables
-export LC_ALL="en_US.UTF-8"
-export EDITOR=vim
+# Disable the bs that disables all input
+stty -ixon
 
 # Aliases
 alias ls='ls --color=auto'
+# TODO: bootstrap nvim
+alias vim='nvim'
 
 # Colored manpages
 man() {
@@ -68,14 +70,26 @@ parse_git_branch() {
 # Fancy PS1 with powerline-shell
 # TODO: Manage auto-install of powerline-shell
 _update_ps1() {
-    PS1=$(powerline-shell 2>/dev/null)
+    if command -v powerline-shell 1>/dev/null 2>&1; then
+	PS1=$(powerline-shell 2>/dev/null)
+    else
+	PS1="\u@\h:\w\$ "
+    fi
 }
 
+# Update PS1
 if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
     PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
 fi
 
+# Load pyenv and pyenv-virtualenv
+# TODO: Manage auto-install of pyenv
 if command -v pyenv 1>/dev/null 2>&1; then
   eval "$(pyenv init -)"
   eval "$(pyenv virtualenv-init -)"
+fi
+
+# Display managers are for losers
+if [[ ! ${DISPLAY} && ${XDG_VTNR} == 1 ]]; then
+	exec startx
 fi
