@@ -71,9 +71,9 @@ parse_git_branch() {
 # TODO: Manage auto-install of powerline-shell
 _update_ps1() {
     if command -v powerline-shell 1>/dev/null 2>&1; then
-	PS1=$(powerline-shell 2>/dev/null)
+        PS1=$(powerline-shell 2>/dev/null)
     else
-	PS1="\u@\h:\w\$ "
+        PS1="\u@\h:\w\$ "
     fi
 }
 
@@ -83,10 +83,16 @@ if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
 fi
 
 # Load pyenv and pyenv-virtualenv
-# TODO: Manage auto-install of pyenv
 if command -v pyenv 1>/dev/null 2>&1; then
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
+    eval "$(pyenv init -)"
+    eval "$(pyenv virtualenv-init -)"
+else
+    # Install if not installed
+    echo "Installing pyenv and pyenv-virtualenv"
+    git clone https://github.com/pyenv/pyenv.git ~/.pyenv
+    git clone https://github.com/pyenv/pyenv-virtualenv.git $PYENV_ROOT/plugins/pyenv-virtualenv
+    echo "Installation done, restarting shell..."
+    exec "$SHELL"
 fi
 
 # Display managers are for losers
