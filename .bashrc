@@ -11,7 +11,7 @@
 # Environment variables
 export GPG_TTY=$(tty)
 export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/.bin/scripts:$PATH"
+export PATH="$HOME/scripts:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export FZF_DEFAULT_OPTS="--bind ctrl-a:select-all;ctrl-d:deselect-all;ctrl-t:toggle-all"
