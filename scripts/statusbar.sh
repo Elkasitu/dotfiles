@@ -8,13 +8,13 @@ generated_output() {
 
 # Set dzen2 parameters
 width=640
-height=21
+height=19
 # TODO: Replaced hard-coded value for xrandr
 xpos=1280
 ypos=0
 bgcolor="#222222"
-fgcolor="#ffffff"
-font="-Iosevka-*-*-*-*-*-10-*-*-*-*-*-*-*"
+fgcolor="#bbbbbb"
+font="-Iosevka-*-*-*-*-*-13-*-*-*-*-*-*-*"
 
 parameters=" -x $xpos -y $ypos -w $width -h $height"
 parameters+=" -fn $font"
