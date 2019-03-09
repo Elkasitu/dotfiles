@@ -5,7 +5,16 @@ conky.config = {
     update_interval = 1
 }
 
-conky.text = [[\
-    Cpu: ${cpu}% Mem: ${memperc}% Net: ${downspeedf wlp4s0} / ${upspeedf wlp4s0}\
-    ${time %a %b %d %H:%M:%S} 
-]]
+-- Glyph dir
+xbmDir = '$HOME/.xbm/'
+
+-- Glyphs
+cpu = '^i(' .. xbmDir .. 'cpu.xbm) ${cpu}% '
+mem = '^i(' .. xbmDir .. 'mem.xbm) ${memperc}% '
+netDownWlan = '^i(' .. xbmDir .. 'down.xbm) ${downspeedf wlp4s0} '
+netUpWlan = '^i(' .. xbmDir .. 'up.xbm) ${upspeedf wlp4s0} '
+date = '${time %a %b %d} '
+time = '${time %H:%M:%S} '
+
+-- Output
+conky.text = cpu .. mem .. netDownWlan .. netUpWlan .. '| ' .. date .. '| ' .. time
