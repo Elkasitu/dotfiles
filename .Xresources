@@ -1,37 +1,45 @@
-XTerm.termName: xterm-256color
-XTerm.vt100.locale: true
-XTerm.vt100.metaSendsEscape: true
-XTerm.vt100.backarrowKey: false
-XTerm.ttyModes: erase ^?
-XTerm.vt100.saveLines: 4096
-XTerm.vt100.selectToClipboard: true
-!XTerm.vt100.reverseVideo: true
-XTerm.vt100.faceName: Iosevka Nerd Font Mono:style=Regular:size=10
-! hard contrast: *background: #1d2021
-*background: #282828
-! soft contrast: *background: #32302f
-*foreground: #ebdbb2
-! Black + DarkGrey
-*color0:  #282828
-*color8:  #928374
-! DarkRed + Red
-*color1:  #cc241d
-*color9:  #fb4934
-! DarkGreen + Green
-*color2:  #98971a
-*color10: #b8bb26
-! DarkYellow + Yellow
-*color3:  #d79921
-*color11: #fabd2f
-! DarkBlue + Blue
-*color4:  #458588
-*color12: #83a598
-! DarkMagenta + Magenta
-*color5:  #b16286
-*color13: #d3869b
-! DarkCyan + Cyan
-*color6:  #689d6a
-*color14: #8ec07c
-! LightGrey + White
-*color7:  #a89984
-*color15: #ebdbb2
+! PaperColor Theme dark
+URxvt*cursorColor: #25c3dc
+URxvt*pointerColor: #25c3dc
+URxvt.foreground: #f2f2f2
+URxvt.background: #1C1C1C
+! black
+URxvt.color0: #2c2c2c
+URxvt.color8: #969694
+! red
+URxvt.color1: #c62828
+URxvt.color9: #f15250
+! green
+URxvt.color2: #558b2e
+URxvt.color10: #86bd47
+! yellow / orange
+URxvt.color3: #f9a825
+URxvt.color11: #f8e63a
+! blue
+URxvt.color4: #1565c1
+URxvt.color12: #77b2f6
+! magenta
+URxvt.color5: #6a1e9a
+URxvt.color13: #b963c8
+! cyan
+URxvt.color6: #00838f
+URxvt.color14: #25c3dc
+! white
+URxvt.color7: #ffffff
+URxvt.color15: #ffffff
+! URxvt Appearance
+URxvt.font: xft:Iosevka:style=Regular:size=10
+URxvt.boldFont: xft:Iosevka:style=Bold:size=10
+URxvt.italicFont: xft:Iosevka:style=Italic:size=10
+URxvt.boldItalicFont: xft:Iosevka:style=Bold Italic:size=10
+URxvt:letterSpace: 0
+URxvt.lineSpace: 0
+URxvt.internalBorder: 24
+URxvt.cursorBlink: true
+URxvt.cursorUnderline: false
+URxvt.saveline: 2048
+URxvt.scrollBar: false
+URxvt.scrollBar_right: false
+URxvt.urgentOnBell: true
+URxvt.depth: 24
+URxvt.iso14755: true

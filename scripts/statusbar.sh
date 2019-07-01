@@ -14,7 +14,7 @@ xpos=1280
 ypos=0
 bgcolor="#222222"
 fgcolor="#bbbbbb"
-font="-Iosevka-*-*-*-*-*-13-*-*-*-*-*-*-*"
+font="-*-iosevka-medium-r-*-*-12-*-*-*-*-*-*-*"
 
 parameters=" -x $xpos -y $ypos -w $width -h $height"
 parameters+=" -fn $font"

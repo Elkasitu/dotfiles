@@ -9,6 +9,7 @@
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Environment variables
+export XDG_CONFIG_HOME="$HOME/.config"
 export GPG_TTY=$(tty)
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/scripts:$PATH"
@@ -67,20 +68,12 @@ parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
 }
 
-# Fancy PS1 with powerline-shell
-# TODO: Manage auto-install of powerline-shell
-_update_ps1() {
-    if command -v powerline-shell 1>/dev/null 2>&1; then
-        PS1=$(powerline-shell 2>/dev/null)
-    else
-        PS1="\u@\h:\w\$ "
-    fi
-}
-
-# Update PS1
-if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]; then
-    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
-fi
+# TODO: Bootstrap powerline
+# Setup PS1 with powerline
+powerline-daemon -q
+POWERLINE_BASH_CONTINUATION=1
+POWERLINE_BASH_SELECT=1
+. $HOME/projects/powerline/powerline/bindings/bash/powerline.sh
 
 # Load pyenv and pyenv-virtualenv
 if command -v pyenv 1>/dev/null 2>&1; then

@@ -24,11 +24,11 @@ Plug 'brooth/far.vim'
 Plug 'majutsushi/tagbar'
 Plug 'simnalamburt/vim-mundo'
 Plug 'scrooloose/nerdtree'
-Plug 'vim-python/python-syntax'
 Plug 'rust-lang/rust.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 Plug 'neovimhaskell/haskell-vim'
+Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
 call plug#end()
 
@@ -41,6 +41,7 @@ set tabstop=4
 set shiftwidth=4
 set ignorecase
 set smartcase
+set nomodeline
 " Save undo history
 if !isdirectory($HOME."/.vim")
     call mkdir($HOME."/.vim", "", 0770)
@@ -87,12 +88,12 @@ command! -bang -nargs=? -complete=dir Files
 " Appearance
 syntax on
 autocmd ColorScheme * highlight Crap ctermbg=red guibg=red
-colorscheme dracula
+colorscheme PaperColor
 set background=dark
 
 " Global variables
-let g:python_host_prog = '/home/elkasitu/.pyenv/versions/2.7.13/bin/python'
-let g:python3_host_prog = '/home/elkasitu/.pyenv/versions/3.5.4/bin/python'
+let g:python_host_prog = '/home/elkasitu/.pyenv/versions/2.7.16/bin/python'
+let g:python3_host_prog = '/home/elkasitu/.pyenv/versions/3.6.8/bin/python'
 
 " Fzf
 let g:fzf_buffers_jump = 1
@@ -177,6 +178,7 @@ nnoremap <C-p>/ :History/<CR>
 nnoremap <C-p>l :BLines<CR>
 nnoremap <C-p>m :Marks<CR>
 nnoremap <C-p>t :Tags<CR>
+nnoremap <C-p>q :BTags<CR>
 
 " Tagbar
 nnoremap <F8> :TagbarToggle<CR>
