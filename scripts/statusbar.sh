@@ -50,6 +50,23 @@ function get_bat() {
     cat /sys/class/power_supply/BAT0/capacity
 }
 
+function _blink() {
+    # this function will make the chosen text "blink" every tick
+    # $1 is the text in question
+    # $2 is the color in which the text should blink, $fgcolor by default
+    if [ "$blinked" -eq "0" ]; then
+        if [ "$2" = "" ]; then
+            status+=$1
+        else
+            status+="^fg($2)$1^fg($fgcolor) "
+        fi
+        blinked=1
+    else
+        status+="^fg($bgcolor)$1^fg($fgcolor) "
+        blinked=0
+    fi
+}
+
 function _display_percent() {
     # display a percentage with color stages
     # $1 is the value to display
@@ -120,7 +137,7 @@ function display_home() {
 
 function display_date() {
     date=`get_date`
-    status+="^i($HOME/.xbm/clock.xbm) $date "
+    status+="^i($HOME/.xbm/clock.xbm) $date  "
 }
 
 function display_power() {
@@ -130,15 +147,7 @@ function display_power() {
     fi
     bat=`get_bat`
     if [ "$bat" -lt "10" ]; then
-        # TODO: trigger a low battery warning with dunst
-        if [ "$blinked" -eq "0" ]; then
-            # TODO: extract blinking to its own function
-            status+="^fg(red)^i($HOME/.xbm/battery10.xbm) $bat%^fg($fgcolor) "
-            blinked=1
-        else
-            status+="^fg($bgcolor)^i($HOME/.xbm/battery10.xbm) $bat%^fg($fgcolor) "
-            blinked=0
-        fi
+        _blink "^i($HOME/.xbm/battery10.xbm) $bat%" "red"
     else
         if [ "$bat" -lt "20" ]; then
             status+="^i($HOME/.xbm/battery20.xbm) $bat% "
@@ -185,11 +194,16 @@ function display_all() {
     echo $status
 }
 
+function _get_resolution_width() {
+    xrandr --query | awk 'NR==2{printf "%s", $4}' | cut -d 'x' -f 1
+}
+
 # Set dzen2 parameters
 width=640
 height=23
-# TODO: Replaced hard-coded value for xrandr
-xpos=1280
+# TODO: Replace hard-coded value for xrandr
+xmax=`_get_resolution_width`
+xpos=$((xmax - width))
 ypos=0
 bgcolor="#222222"
 fgcolor="#bbbbbb"
