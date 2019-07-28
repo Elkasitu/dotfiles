@@ -50,6 +50,24 @@ function get_bat() {
     cat /sys/class/power_supply/BAT0/capacity
 }
 
+function _get_lan_if() {
+    ip link show | grep enp | cut -d ':' -f 2 | cut -d ' ' -f 2
+}
+
+function _get_wlan_if() {
+    ip link show | grep wlp | cut -d ':' -f 2 | cut -d ' ' -f 2
+}
+
+function get_wlan_info() {
+    if=`_get_wlan_if`
+    iwconfig $if
+}
+
+function get_wlan_ssid() {
+    # $1 is the general information from which the SSID will be parsed
+    echo $1 | grep ESSID | cut -d ':' -f 2 | cut -d '"' -f 2
+}
+
 function _blink() {
     # this function will make the chosen text "blink" every tick
     # $1 is the text in question

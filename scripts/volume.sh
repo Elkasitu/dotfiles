@@ -60,7 +60,7 @@ case $1 in
 	;;
     mute)
     	# Toggle mute
-	amixer set Master 1+ toggle > /dev/null
+	amixer set Master toggle > /dev/null
 	if is_mute ; then
 dunstify -i "/usr/share/icons/Faba/48x48/notifications/notification-audio-volume-muted.svg" --replace=555 -u normal "Mute" -t 2000
 	else
