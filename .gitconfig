@@ -71,6 +71,7 @@
             }; \
             \
             newurl="$lefturl$remote/$righturl"; \
+            echo "$newurl"; \
             git remote add $remote "$newurl"; \
             \
         }; \

@@ -9,6 +9,7 @@ endif
 " Plugins
 call plug#begin('~/.local/share/vim/plugged')
 
+Plug 'ollykel/v-vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -163,6 +164,8 @@ autocmd BufWinEnter * match Crap '^\(<\|=\|>\)\{7\}\([^=].\+\)\?$'
 autocmd InsertEnter * match Crap /\s\+\%#\@<!$/
 autocmd InsertLeave * match Crap /\s\+$/
 autocmd BufWinLeave * call clearmatches()
+" Rofi theme files
+autocmd BufNewFile,BufRead /*.rasi setf css
 
 
 " Mappings

@@ -34,3 +34,9 @@
 # Mute volume
 "volume.sh mute"
     XF86AudioMute
+
+"lock.sh"
+    Mod4 + BackSpace
+
+"screenshot.sh"
+    Print

@@ -18,6 +18,7 @@ export PATH="$PYENV_ROOT/bin:$PATH"
 export FZF_DEFAULT_OPTS="--bind ctrl-a:select-all;ctrl-d:deselect-all;ctrl-t:toggle-all"
 export LC_ALL="en_GB.UTF-8"
 export EDITOR=nvim
+export VISUAL=nvim
 
 # Use bash-completion, if available
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
@@ -90,5 +91,6 @@ fi
 
 # Display managers are for losers
 if [[ ! ${DISPLAY} && ${XDG_VTNR} == 1 ]]; then
+    # TODO: replace by xinit?
 	exec startx
 fi

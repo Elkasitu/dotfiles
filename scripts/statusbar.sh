@@ -1,6 +1,27 @@
 #!/usr/bin/env bash
 # TODO: use case statements kek
 
+# TODO: put this in another file and source it here
+function _emojify() {
+    echo "^fn(Font Awesome 5 Free Solid:size=10)$1^fn()"
+}
+
+emoji_mute=`_emojify `
+emoji_low_vol=`_emojify `
+emoji_mid_vol=`_emojify `
+emoji_hi_vol=`_emojify `
+emoji_cpu=`_emojify `
+emoji_ram=`_emojify `
+emoji_ac=`_emojify `
+emoji_bat_0=`_emojify `
+emoji_bat_1=`_emojify `
+emoji_bat_2=`_emojify `
+emoji_bat_3=`_emojify `
+emoji_bat_4=`_emojify `
+emoji_hdd=`_emojify `
+emoji_calendar=`_emojify `
+emoji_clock=`_emojify `
+
 function get_vol() {
     # gets the volume level from amixer
     amixer get Master | grep '%' | head -n 1 | cut -d '[' -f 2 | cut -d '%' -f 1
@@ -39,7 +60,11 @@ function get_home() {
 }
 
 function get_date() {
-    date +"%a %b %d %H:%M:%S"
+    date +"%a %b %d"
+}
+
+function get_time() {
+    date +"%H:%M:%S"
 }
 
 function get_ac() {
@@ -68,6 +93,24 @@ function get_wlan_ssid() {
     echo $1 | grep ESSID | cut -d ':' -f 2 | cut -d '"' -f 2
 }
 
+function get_active_wm_name() {
+    # requires xdotool package
+    xdotool getactivewindow getwindowname
+}
+
+function get_current_monitor() {
+    bspc query -M -m focused
+}
+
+function get_current_mon_desktops() {
+    m=`get_current_monitor`
+    echo $m | bspc query -D -m --names
+}
+
+function get_focused_desktop() {
+    bspc query -D -d focused --names
+}
+
 function _blink() {
     # this function will make the chosen text "blink" every tick
     # $1 is the text in question
@@ -88,13 +131,8 @@ function _blink() {
 function _display_percent() {
     # display a percentage with color stages
     # $1 is the value to display
-    # $2 is the icon name or a string
-    img_path="$HOME/.xbm/$2.xbm"
-    if [ -e "$img_path" ]; then
-        status+="^i($img_path) "
-    else
-        status+="$2 "
-    fi
+    # $2 is a string (emoji, plain-text) to display before the information
+    status+="$2 "
     if [ "$1" -lt "25" ]; then
         status+="^fg(green)"
     else
@@ -114,20 +152,16 @@ function _display_percent() {
 function display_vol {
     # makes use of get_vol and get_mute to dynamically display the mixer status
     if get_mute ; then
-        status+="^i($HOME/.xbm/volume0.xbm) "
+        status+="$emoji_mute "
     else
         vol=`get_vol`
-        if [ "$vol" -lt "25" ]; then
-            status+="^i($HOME/.xbm/volume25.xbm) $vol% "
+        if [ "$vol" -lt "33" ]; then
+            status+="$emoji_low_vol $vol% "
         else
-            if [ "$vol" -lt "50" ]; then
-                status+="^i($HOME/.xbm/volume50.xbm) $vol% "
+            if [ "$vol" -lt "66" ]; then
+                status+="$emoji_mid_vol $vol% "
             else
-                if [ "$vol" -lt "75" ]; then
-                    status+="^i($HOME/.xbm/volume75.xbm) $vol% "
-                else
-                    status+="^i($HOME/.xbm/volume100.xbm) $vol% "
-                fi
+                status+="$emoji_hi_vol $vol% "
             fi
         fi
     fi
@@ -135,73 +169,85 @@ function display_vol {
 
 function display_cpu() {
     cpu=`get_cpu`
-    _display_percent $cpu 'cpu'
+    _display_percent $cpu "$emoji_cpu"
 }
 
 function display_mem() {
     mem=`get_mem`
-    _display_percent $mem 'mem'
+    _display_percent $mem "$emoji_ram"
 }
 
 function display_root() {
     root=`get_root`
-    _display_percent $root '/: '
+    _display_percent $root "$emoji_hdd"
 }
 
 function display_home() {
     home=`get_home`
-    _display_percent $home '/home: '
+    _display_percent $home "$emoji_hdd"
 }
 
 function display_date() {
     date=`get_date`
-    status+="^i($HOME/.xbm/clock.xbm) $date  "
+    status+="$emoji_calendar $date  "
+}
+
+function display_time() {
+    time=`get_time`
+    status+="$emoji_clock $time "
 }
 
 function display_power() {
     # display both AC and battery status
     if get_ac ; then
-        status+="^fg(yellow)^i($HOME/.xbm/ac_01.xbm) AC^fg($fgcolor) "
+        status+="^fg(yellow)$emoji_ac AC^fg($fgcolor) "
     fi
     bat=`get_bat`
     if [ "$bat" -lt "10" ]; then
-        _blink "^i($HOME/.xbm/battery10.xbm) $bat%" "red"
+        _blink "$emoji_bat_0 $bat%" "red"
     else
-        if [ "$bat" -lt "20" ]; then
-            status+="^i($HOME/.xbm/battery20.xbm) $bat% "
+        if [ "$bat" -lt "30" ]; then
+            status+="$emoji_bat_1 $bat% "
         else
-            if [ "$bat" -lt "30" ]; then
-                status+="^i($HOME/.xbm/battery30.xbm) $bat% "
+            if [ "$bat" -lt "60" ]; then
+                status+="$emoji_bat_2 $bat% "
             else
-                if [ "$bat" -lt "40" ]; then
-                    status+="^i($HOME/.xbm/battery40.xbm) $bat% "
+                if [ "$bat" -lt "90" ]; then
+                    status+="$emoji_bat_3 $bat% "
                 else
-                    if [ "$bat" -lt "50" ]; then
-                        status+="^i($HOME/.xbm/battery50.xbm) $bat% "
-                    else
-                        if [ "$bat" -lt "60" ]; then
-                            status+="^i($HOME/.xbm/battery60.xbm) $bat% "
-                        else
-                            if [ "$bat" -lt "70" ]; then
-                                status+="^i($HOME/.xbm/battery70.xbm) $bat% "
-                            else
-                                if [ "$bat" -lt "80" ]; then
-                                    status+="^i($HOME/.xbm/battery80.xbm) $bat% "
-                                else
-                                    status+="^fg(green)^i($HOME/.xbm/battery90.xbm) $bat%^fg($fgcolor) "
-                                fi
-                            fi
-                        fi
-                    fi
+                    status+="$emoji_bat_4 $bat% "
                 fi
             fi
         fi
     fi
 }
 
+function display_active_wm_name() {
+    active_wm_name=`get_active_wm_name`
+    wmn_size=${#active_wm_name}*2
+    status+="^p(+100)$active_wm_name^p(_RIGHT)^p(-450)"
+}
+
+function display_cur_mon_desktops() {
+    # TODO: do separately by subscribing to bspc to get instantaneous update
+    status+="^p(_LEFT) "
+    desktops=`get_current_mon_desktops`
+    focused=`get_focused_desktop`
+    for desktop in $desktops
+    do
+        if [ "$desktop" = "$focused" ]; then
+            status+="^bg(red) ^fg(black)$desktop^fg() ^bg()"
+        else
+            status+=" $desktop "
+        fi
+    done
+}
+
 function display_all() {
     # calls all display_* functions to form the status bar
     status=""
+    display_cur_mon_desktops
+    display_active_wm_name
     display_power
     display_vol
     display_cpu
@@ -209,6 +255,7 @@ function display_all() {
     display_root
     display_home
     display_date
+    display_time
     echo $status
 }
 
@@ -217,19 +264,18 @@ function _get_resolution_width() {
 }
 
 # Set dzen2 parameters
-width=640
+width=`_get_resolution_width`
 height=23
-# TODO: Replace hard-coded value for xrandr
-xmax=`_get_resolution_width`
-xpos=$((xmax - width))
+xpos=0
 ypos=0
 bgcolor="#222222"
 fgcolor="#bbbbbb"
 font="-*-iosevka-medium-r-*-*-11-*-*-*-*-*-*-*"
+emoji_font="-*-font awesome 5 free regular-medium-r-normal-*-12-*-*-*-*-*-*-*"
 
 parameters=" -x $xpos -y $ypos -w $width -h $height"
 parameters+=" -fn $font"
-parameters+=" -ta r -bg $bgcolor -fg $fgcolor"
+parameters+=" -ta l -bg $bgcolor -fg $fgcolor"
 parameters+=" -title-name dzenbar"
 
 # Execution
