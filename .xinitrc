@@ -1,10 +1,10 @@
 setxkbmap us -option caps:escape
-xrandr --setprovideroutputsource modesetting NVIDIA-0
-xrandr --auto
-xrandr --output DP-1-2-2 --right-of eDP-1-1
+xrandr --output DP2-2 --right-of eDP1
 xbindkeys
 feh --bg-scale Pictures/cozy.jpg &
 xrdb /home/elkasitu/.Xresources
 dunst &
+udiskie &
 xsetroot -cursor_name left_ptr &
+redshift -P -O 3500
 exec bspwm
