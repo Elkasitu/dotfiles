@@ -9,25 +9,22 @@ endif
 " Plugins
 call plug#begin('~/.local/share/vim/plugged')
 
-Plug 'ollykel/v-vim'
 Plug 'flazz/vim-colorschemes'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
 Plug 'scrooloose/nerdcommenter'
 Plug 'tpope/vim-surround'
-Plug 'raimondi/delimitmate'
 Plug 'junegunn/fzf', {'dir': '~/.fzf', 'do': './install --all'}
 Plug 'junegunn/fzf.vim'
 Plug 'valloric/listtoggle'
 Plug 'tpope/vim-fugitive'
-Plug 'brooth/far.vim'
 Plug 'majutsushi/tagbar'
 Plug 'simnalamburt/vim-mundo'
 Plug 'scrooloose/nerdtree'
 Plug 'rust-lang/rust.vim'
 Plug 'pangloss/vim-javascript'
-Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
+"Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 Plug 'neovimhaskell/haskell-vim'
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
@@ -53,7 +50,7 @@ endif
 set undodir=~/.vim/undodir
 set undofile
 set noshowmode
-set colorcolumn=80,100
+set colorcolumn=100
 set mouse=a
 set cursorline
 set formatoptions+=j
@@ -72,6 +69,11 @@ function! NumberToggle() abort
     endif
 endfunc
 
+" Search for a model definition within Odoo
+function! SearchModelDefinition(model) abort
+    call fzf#vim#ag('_name.*' . model)
+endfunc
+
 
 " Commands
 " Ag command preview
@@ -88,12 +90,12 @@ command! -bang -nargs=? -complete=dir Files
 
 " Appearance
 syntax on
+colorscheme Tomorrow-Night
 autocmd ColorScheme * highlight Crap ctermbg=red guibg=red
-colorscheme PaperColor
 set background=dark
 
 " Global variables
-let g:python_host_prog = '/home/elkasitu/.pyenv/versions/2.7.16/bin/python'
+let g:python_host_prog = '/home/elkasitu/.pyenv/versions/3.6.8/bin/python'
 let g:python3_host_prog = '/home/elkasitu/.pyenv/versions/3.6.8/bin/python'
 
 " Fzf
@@ -116,13 +118,12 @@ let g:fzf_colors =
 " Airline
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
-let g:airline#extensions#syntastic#enabled = 1
+let g:airline_theme='tomorrow'
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
 
-" Airline symbols
 let g:airline_left_sep = ''
 let g:airline_left_alt_sep = ''
 let g:airline_right_sep = ''
@@ -170,7 +171,7 @@ autocmd BufNewFile,BufRead /*.rasi setf css
 
 " Mappings
 " FZF
-nnoremap <C-p>a :Ag
+nnoremap <C-p>a :Ag 
 nnoremap <C-p>b :Buffers<CR>
 nnoremap <C-p>c :Commands<CR>
 nnoremap <C-p>f :Files<CR>
