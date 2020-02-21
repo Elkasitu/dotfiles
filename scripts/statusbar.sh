@@ -6,21 +6,21 @@ function _emojify() {
     echo "^fn(Font Awesome 5 Free Solid:size=10)$1^fn()"
 }
 
-emoji_mute=`_emojify `
-emoji_low_vol=`_emojify `
-emoji_mid_vol=`_emojify `
-emoji_hi_vol=`_emojify `
-emoji_cpu=`_emojify `
-emoji_ram=`_emojify `
-emoji_ac=`_emojify `
-emoji_bat_0=`_emojify `
-emoji_bat_1=`_emojify `
-emoji_bat_2=`_emojify `
-emoji_bat_3=`_emojify `
-emoji_bat_4=`_emojify `
-emoji_hdd=`_emojify `
-emoji_calendar=`_emojify `
-emoji_clock=`_emojify `
+emoji_mute=$(_emojify )
+emoji_low_vol=$(_emojify )
+emoji_mid_vol=$(_emojify )
+emoji_hi_vol=$(_emojify )
+emoji_cpu=$(_emojify )
+emoji_ram=$(_emojify )
+emoji_ac=$(_emojify )
+emoji_bat_0=$(_emojify )
+emoji_bat_1=$(_emojify )
+emoji_bat_2=$(_emojify )
+emoji_bat_3=$(_emojify )
+emoji_bat_4=$(_emojify )
+emoji_hdd=$(_emojify )
+emoji_calendar=$(_emojify )
+emoji_clock=$(_emojify )
 
 function get_vol() {
     # gets the volume level from amixer
@@ -84,13 +84,13 @@ function _get_wlan_if() {
 }
 
 function get_wlan_info() {
-    if=`_get_wlan_if`
-    iwconfig $if
+    if=$(_get_wlan_if)
+    iwconfig "$if"
 }
 
 function get_wlan_ssid() {
     # $1 is the general information from which the SSID will be parsed
-    echo $1 | grep ESSID | cut -d ':' -f 2 | cut -d '"' -f 2
+    echo "$1" | grep ESSID | cut -d ':' -f 2 | cut -d '"' -f 2
 }
 
 function get_active_wm_name() {
@@ -103,8 +103,8 @@ function get_current_monitor() {
 }
 
 function get_current_mon_desktops() {
-    m=`get_current_monitor`
-    echo $m | bspc query -D -m --names
+    m=$(get_current_monitor)
+    echo "$m" | bspc query -D -m --names
 }
 
 function get_focused_desktop() {
@@ -154,7 +154,7 @@ function display_vol {
     if get_mute ; then
         status+="$emoji_mute "
     else
-        vol=`get_vol`
+        vol=$(get_vol)
         if [ "$vol" -lt "33" ]; then
             status+="$emoji_low_vol $vol% "
         else
@@ -168,32 +168,32 @@ function display_vol {
 }
 
 function display_cpu() {
-    cpu=`get_cpu`
-    _display_percent $cpu "$emoji_cpu"
+    cpu=$(get_cpu)
+    _display_percent "$cpu" "$emoji_cpu"
 }
 
 function display_mem() {
-    mem=`get_mem`
-    _display_percent $mem "$emoji_ram"
+    mem=$(get_mem)
+    _display_percent "$mem" "$emoji_ram"
 }
 
 function display_root() {
-    root=`get_root`
-    _display_percent $root "$emoji_hdd"
+    root=$(get_root)
+    _display_percent "$root" "$emoji_hdd"
 }
 
 function display_home() {
-    home=`get_home`
-    _display_percent $home "$emoji_hdd"
+    home=$(get_home)
+    _display_percent "$home" "$emoji_hdd"
 }
 
 function display_date() {
-    date=`get_date`
+    date=$(get_date)
     status+="$emoji_calendar $date  "
 }
 
 function display_time() {
-    time=`get_time`
+    time=$(get_time)
     status+="$emoji_clock $time "
 }
 
@@ -202,7 +202,7 @@ function display_power() {
     if get_ac ; then
         status+="^fg(yellow)$emoji_ac AC^fg($fgcolor) "
     fi
-    bat=`get_bat`
+    bat=$(get_bat)
     if [ "$bat" -lt "10" ]; then
         _blink "$emoji_bat_0 $bat%" "red"
     else
@@ -223,16 +223,15 @@ function display_power() {
 }
 
 function display_active_wm_name() {
-    active_wm_name=`get_active_wm_name`
-    wmn_size=${#active_wm_name}*2
-    status+="^p(+100)$active_wm_name^p(_RIGHT)^p(-450)"
+    active_wm_name=$(get_active_wm_name)
+    status+="^p(+50)$active_wm_name^p(_RIGHT)^p(-600)"
 }
 
 function display_cur_mon_desktops() {
     # TODO: do separately by subscribing to bspc to get instantaneous update
     status+="^p(_LEFT) "
-    desktops=`get_current_mon_desktops`
-    focused=`get_focused_desktop`
+    desktops=$(get_current_mon_desktops)
+    focused=$(get_focused_desktop)
     for desktop in $desktops
     do
         if [ "$desktop" = "$focused" ]; then
@@ -256,24 +255,23 @@ function display_all() {
     display_home
     display_date
     display_time
-    echo $status
+    echo "$status"
 }
 
 function _get_resolution_width() {
-    xrandr --query | awk 'NR==2{printf "%s", $4}' | cut -d 'x' -f 1
+    xrandr --query | awk 'NR==2{printf "%s", $8}'
 }
 
 # Set dzen2 parameters
-width=`_get_resolution_width`
+width=$(_get_resolution_width)
 height=23
 xpos=0
 ypos=0
 bgcolor="#222222"
 fgcolor="#bbbbbb"
-font="-*-iosevka-medium-r-*-*-11-*-*-*-*-*-*-*"
-emoji_font="-*-font awesome 5 free regular-medium-r-normal-*-12-*-*-*-*-*-*-*"
+font="-*-iosevka-medium-*-*-*-*-*-*-*-*-*-*-*"
 
-parameters=" -x $xpos -y $ypos -w $width -h $height"
+parameters="-x $xpos -y $ypos -w $width -h $height"
 parameters+=" -fn $font"
 parameters+=" -ta l -bg $bgcolor -fg $fgcolor"
 parameters+=" -title-name dzenbar"
