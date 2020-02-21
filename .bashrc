@@ -62,19 +62,7 @@ if [ "$TERM" = "linux" ]; then
     printf '\033]PE2EE6E6'; # brighter cyan
     printf '\033]PFE6D7AB'; # brighter white
     clear;
-fi;
-
-# Get git branch name in current directory
-parse_git_branch() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
-}
-
-# TODO: Bootstrap powerline
-# Setup PS1 with powerline
-powerline-daemon -q
-POWERLINE_BASH_CONTINUATION=1
-POWERLINE_BASH_SELECT=1
-. $HOME/projects/powerline/powerline/bindings/bash/powerline.sh
+fi
 
 # Load pyenv and pyenv-virtualenv
 if command -v pyenv 1>/dev/null 2>&1; then
@@ -94,3 +82,5 @@ if [[ ! ${DISPLAY} && ${XDG_VTNR} == 1 ]]; then
     # TODO: replace by xinit?
 	exec startx
 fi
+
+eval "$(starship init bash)"
