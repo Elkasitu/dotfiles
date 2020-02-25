@@ -24,7 +24,6 @@ Plug 'simnalamburt/vim-mundo'
 Plug 'scrooloose/nerdtree'
 Plug 'rust-lang/rust.vim'
 Plug 'pangloss/vim-javascript'
-"Plug 'autozimu/LanguageClient-neovim', {'branch': 'next', 'do': 'bash install.sh'}
 Plug 'neovimhaskell/haskell-vim'
 Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
 
@@ -71,22 +70,20 @@ endfunc
 
 " Search for a model definition within Odoo
 function! SearchModelDefinition(model) abort
-    call fzf#vim#ag('_name.*' . model)
+    call RipgrepFzf('\b_name.*' . a:model . '[''"\]]+$', 0)
 endfunc
 
+function! RipgrepFzf(query, fullscreen)
+    let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+    let initial_command = printf(command_fmt, shellescape(a:query))
+    let reload_command = printf(command_fmt, '{q}')
+    let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:' . reload_command]}
+    call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
 
-" Commands
-" Ag command preview
-command! -bang -nargs=* Ag
-    \ call fzf#vim#ag(<q-args>,
-    \                 <bang>0 ? fzf#vim#with_preview('up:60%')
-    \                         : fzf#vim#with_preview('right:50%:hidden', '?'),
-    \                 <bang>0)
-
-" Files preview
-command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
+" Custom commands
+command! -nargs=1 SearchModelDefinition call SearchModelDefinition(<q-args>)
+command! -bang -nargs=* Rg call RipgrepFzf(<q-args>, <bang>0)
 
 " Appearance
 syntax on
@@ -139,12 +136,6 @@ let g:airline_symbols.whitespace = 'Ξ'
 " GitGutter
 set signcolumn=yes
 
-" LanguageClient
-let g:LanguageClient_serverCommands = {
-    \ 'python': ['pyls'],
-    \ }
-set completefunc=LanguageClient#complete
-
 " Misc
 let mapleader = "-"
 
@@ -171,7 +162,7 @@ autocmd BufNewFile,BufRead /*.rasi setf css
 
 " Mappings
 " FZF
-nnoremap <C-p>a :Ag 
+nnoremap <C-p>a :Rg 
 nnoremap <C-p>b :Buffers<CR>
 nnoremap <C-p>c :Commands<CR>
 nnoremap <C-p>f :Files<CR>
@@ -183,6 +174,9 @@ nnoremap <C-p>l :BLines<CR>
 nnoremap <C-p>m :Marks<CR>
 nnoremap <C-p>t :Tags<CR>
 nnoremap <C-p>q :BTags<CR>
+
+" Odoo
+nnoremap <C-p>o :SearchModelDefinition 
 
 " Tagbar
 nnoremap <F8> :TagbarToggle<CR>
