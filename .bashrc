@@ -19,6 +19,7 @@ export FZF_DEFAULT_OPTS="--bind ctrl-a:select-all;ctrl-d:deselect-all;ctrl-t:tog
 export LC_ALL="en_GB.UTF-8"
 export EDITOR=nvim
 export VISUAL=nvim
+export _JAVA_AWT_WM_NONREPARENTING=1
 
 # Use bash-completion, if available
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
