@@ -23,8 +23,9 @@ def get_pr_info(pr_num):
 
 def parse_pr_info(info):
     if not info['maintainer_can_modify']:
-        print("This PR cannot be fetched as the user has chosen not to allow maintainer modifications")
-        sys.exit(1)
+        # print("This PR cannot be fetched as the user has chosen not to allow maintainer modifications")
+        ...
+        # sys.exit(1)
     head = info['head']
     return (head['user']['login'], head['repo']['ssh_url'], head['ref'])
 

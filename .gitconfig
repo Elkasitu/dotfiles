@@ -10,6 +10,7 @@
 	program = gpg2
 [init]
 	templatedir = ~/.git_template
+	defaultBranch = master
 [merge]
     tool = fugitive
 [mergetool "fugitive"]
@@ -26,3 +27,7 @@
 	hist = log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short
     # re-generate ctags for the entire repo
 	ctags = !.git/hooks/ctags
+    # clean up loose objects and such
+    crush = ! git gc --prune=now && git repack -AdFb --window=500
+[pull]
+	rebase = true

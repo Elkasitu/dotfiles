@@ -25,7 +25,10 @@ Plug 'scrooloose/nerdtree'
 Plug 'rust-lang/rust.vim'
 Plug 'pangloss/vim-javascript'
 Plug 'neovimhaskell/haskell-vim'
-Plug 'numirias/semshi', {'do': ':UpdateRemotePlugins'}
+Plug 'leafgarland/typescript-vim'
+Plug 'MaxMEllon/vim-jsx-pretty'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'ayu-theme/ayu-vim'
 
 call plug#end()
 
@@ -87,9 +90,10 @@ command! -bang -nargs=* Rg call RipgrepFzf(<q-args>, <bang>0)
 
 " Appearance
 syntax on
-colorscheme Tomorrow-Night
+colorscheme ayu
 autocmd ColorScheme * highlight Crap ctermbg=red guibg=red
 set background=dark
+set termguicolors
 
 " Global variables
 let g:python_host_prog = '/home/elkasitu/.pyenv/versions/3.6.8/bin/python'
@@ -192,6 +196,7 @@ nnoremap <leader>r :call NumberToggle()<CR>
 nnoremap <leader>p :bp<CR>
 nnoremap <leader>n :bn<CR>
 nnoremap <space> za
+nmap <leader>v <Plug>(coc-rename)
 
 " Copy/Cut/Paste from XOrg's CLIPBOARD buffer
 " requires vim compiled with the +clipboard flag

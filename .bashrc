@@ -5,21 +5,22 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# Load fzf
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
-
 # Environment variables
 export XDG_CONFIG_HOME="$HOME/.config"
 export GPG_TTY=$(tty)
 export PATH="$HOME/.cargo/bin:$PATH"
-export PATH="$HOME/scripts:$PATH"
+export PATH="$HOME/scripts:$HOME/src/odoo:$PATH"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export FZF_DEFAULT_OPTS="--bind ctrl-a:select-all;ctrl-d:deselect-all;ctrl-t:toggle-all"
+export FZF_DEFAULT_COMMAND="fd --type f"
 export LC_ALL="en_GB.UTF-8"
 export EDITOR=nvim
 export VISUAL=nvim
 export _JAVA_AWT_WM_NONREPARENTING=1
+export ANDROID_SDK_ROOT=/opt/android-sdk/
+export ANDROID_HOME=/opt/android-sdk/
+export MAKEFLAGS="-j$(nproc)"
 
 # Use bash-completion, if available
 [[ $PS1 && -f /usr/share/bash-completion/bash_completion ]] && \
@@ -85,3 +86,6 @@ if [[ ! ${DISPLAY} && ${XDG_VTNR} == 1 ]]; then
 fi
 
 eval "$(starship init bash)"
+
+# Load fzf
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
