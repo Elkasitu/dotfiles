@@ -4,7 +4,7 @@
 	editor = nvim
 	excludesFile = ~/.gitignore_global
 [commit]
-    gpgsign = true
+    ;gpgsign = true
 	verbose = true
 [gpg]
 	program = gpg2
@@ -29,5 +29,166 @@
 	ctags = !.git/hooks/ctags
     # clean up loose objects and such
     crush = ! git gc --prune=now && git repack -AdFb --window=500
+
+    # expected format: git rebase-pr 42
+    # rebase a given pull request number on current branch
+    # p = the number of the pr, e.g. 42
+    # b = current user branch, e.g. master
+    # r = the remote of current branch, e.g. origin
+    # e.g. git fetch origin pull/42/head:pr-42
+    rebase-pr = "!f() {\
+        p=$1 && \
+        b=`git symbolic-ref -q --short HEAD` && \
+        r=`git config branch.$b.remote`; \
+        r=${r:-origin} && \
+        git fetch $r pull/$p/head:pr-$p && \
+        git fetch -f $r pull/$p/merge:PR_MERGE_HEAD && \
+        git rebase --onto $b PR_MERGE_HEAD^ pr-$p && \
+        git checkout $b && \
+        git merge --quiet --ff-only pr-$p && \
+        git branch -D PR_MERGE_HEAD && \
+        git branch -D pr-$p && \
+        echo && \
+        git diff --stat $b..$r/$b && echo && \
+        git rebase -i $r/$b;}; f"
+
+    # expected format: git get-br mart-e:patch-42
+    # where "mart-e:patch-42" is the source in the description of the PR
+    # if the remote is not present, add it
+    # fetch the branch and checkout
+    get-br = "!f() {\
+        remote=`echo $1 | cut -d ":" -f1`; \
+        branch=`echo $1 | cut -d ":" -f2`; \
+        \
+        localbranch=`git symbolic-ref -q --short HEAD`; \
+        localremote=`git config branch.$localbranch.remote`; \
+        if [ -z $localremote ]; then { \
+            echo "Branch $localbranch is not linked to any remote, can not guess the URL for the remote $remote."; \
+            echo "Set a remote or switch to the current branch."; \
+            exit; \
+        } fi; \
+        \
+        localurl=`git config remote.$localremote.url`; \
+        \
+        remoteurlpresent=`git config remote.$remote.url`; \
+        if [ -z $remoteurlpresent ]; then {  \
+            \
+            lefturl='git@github.com:'; \
+            righturl=`echo $localurl | cut -d "/" -f2`; \
+            \
+            isssh=`echo $localurl | grep 'git@' | wc -l`; \
+            [ $isssh -eq 0 ] && { \
+                lefturl='https://github.com/'; \
+                righturl=`echo $localurl | cut -d "/" -f5`; \
+            }; \
+            \
+            newurl="$lefturl$remote/$righturl"; \
+            git remote add $remote "$newurl"; \
+            \
+        } fi; \
+        remotebranchpresent=`git config branch.$branch.remote`; \
+        git fetch $remote $branch; \
+        if [ -z $remotebranchpresent ]; then {  \
+            git branch $branch $remote/$branch; \
+        } elif [ "$remotebranchpresent" != "$remote" ]; then {  \
+            echo "! Branch $branch already present localy with a different remote than $remote"; \
+            echo "! Creating a local branch $branch-$remote with a different name than the remote."; \
+            echo "! Use \"git push $remote $branch-$remote:$branch\" to push in it."; \
+            git branch $branch-$remote $remote/$branch; \
+            branch="$branch-$remote"; \
+        } fi; \
+        git checkout $branch; \
+        echo "Switched to $remote/$branch"; \
+    }; f"
+
+    # expected format: git rem-br odoo:my-master
+    # clean after a git get-br
+    rem-br = "!f() {\
+        remote=`echo $1 | cut -d ":" -f1`; \
+        branch=`echo $1 | cut -d ":" -f2`; \
+        current=`git symbolic-ref -q --short HEAD`; \
+        if [ "$current" = "$branch" ]; then {  \
+            echo "Checkout in a different branch before removing $branch"; \
+            exit;  \
+        } fi; \
+        git branch -D $branch; \
+        git remote remove $remote; \
+    }; f"
+
+    # expected format: git create_pr mart-e/master
+    # open a browser to create a PR to target remote/branch from current
+    create-pr = "!f() {\
+        branch=`git symbolic-ref -q --short HEAD`; \
+        remote=`git config branch.$branch.remote`; \
+        \
+        remoteurl=`git config remote.$remote.url`; \
+        rmiddleurl=`echo $remoteurl | cut -d ":" -f2 | cut -d "/" -f1`; \
+        isssh=`echo $remoteurl | grep 'git@' | wc -l`; \
+        [ $isssh -eq 0 ] && { \
+            rmiddleurl=`echo $remoteurl | cut -d "/" -f4`; \
+        }; \
+        \
+        tremote=`echo $1 | cut -d "/" -f1`; \
+        tbranch=`echo $1 | cut -d "/" -f2`; \
+        \
+        tremoteurl=`git config remote.$tremote.url`; \
+        lefturl='https://github.com/'; \
+        middleurl=`echo $tremoteurl | cut -d ":" -f2 | cut -d "/" -f1`; \
+        righturl=`echo $tremoteurl | cut -d ":" -f2 | cut -d "/" -f2 | cut -d "." -f1`; \
+        isssh=`echo $tremoteurl | grep 'git@' | wc -l`; \
+        [ $isssh -eq 0 ] && { \
+            middleurl=`echo $tremoteurl | cut -d "/" -f4`; \
+            righturl=`echo $tremoteurl | cut -d "/" -f5 | cut -d "." -f1`; \
+        }; \
+        \
+        compareurl="$lefturl$middleurl/$righturl/compare/$tbranch...$rmiddleurl:$branch"; \
+        echo "Opening $compareurl"; \
+        xdg-open "$compareurl";\
+    }; f"
+
+    # open the list of commits of the current branch on github
+    show-br = "!f() {\
+        branch=`git symbolic-ref -q --short HEAD`; \
+        remote=`git config branch.$branch.remote`; \
+        remote_url=`git config remote.$remote.url`; \
+        \
+        left_url=; \
+        middle_url=`echo $remote_url | cut -d ":" -f2 | cut -d "/" -f1`; \
+        right_url=`echo $remote_url | cut -d ":" -f2 | cut -d "/" -f2 | cut -d "." -f1`; \
+        is_ssh=`echo $remote_url | grep 'git@' | wc -l`; \
+        [ $is_ssh -eq 0 ] && { \
+            middle_url=`echo $remote_url | cut -d "/" -f4`; \
+            right_url=`echo $remote_url | cut -d "/" -f5 | cut -d "." -f1`; \
+        }; \
+        commit_url="https://github.com/$middle_url/$right_url/commits/$branch"; \
+        echo "Opening $commit_url"; \
+        xdg-open "$commit_url"; \
+    }; f"
+
+    # open the given or last commit of the current branch on github
+    show-commit = "!f() {\
+        branch=`git symbolic-ref -q --short HEAD`; \
+        remote=`git config branch.$branch.remote`; \
+        remote_url=`git config remote.$remote.url`; \
+        commit_hash=$1; \
+        [ -z $commit_hash ] && { \
+            commit_hash=`git rev-parse HEAD`; \
+        }; \
+        \
+        left_url=; \
+        middle_url=`echo $remote_url | cut -d ":" -f2 | cut -d "/" -f1`; \
+        right_url=`echo $remote_url | cut -d ":" -f2 | cut -d "/" -f2 | cut -d "." -f1`; \
+        is_ssh=`echo $remote_url | grep 'git@' | wc -l`; \
+        [ $is_ssh -eq 0 ] && { \
+            middle_url=`echo $remote_url | cut -d "/" -f4`; \
+            right_url=`echo $remote_url | cut -d "/" -f5 | cut -d "." -f1`; \
+        }; \
+        commit_url="https://github.com/$middle_url/$right_url/commit/$commit_hash"; \
+        echo "Opening $commit_url"; \
+        xdg-open "$commit_url"; \
+    }; f"
+
+    find = log --pretty=\"format:%Cgreen%H %Cblue%s\" --name-status --grep
+    pushf = push --force-with-lease
 [pull]
 	rebase = true

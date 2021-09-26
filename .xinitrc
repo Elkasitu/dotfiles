@@ -1,7 +1,7 @@
-xrandr --output DP-2-3 --same-as eDP-1
 xbindkeys
-feh --bg-scale Pictures/cozy.jpg &
+setxkbmap -option compose:caps
 xrdb /home/elkasitu/.Xresources
 dunst &
+flameshot &
 xsetroot -cursor_name left_ptr &
-exec bspwm
+exec i3

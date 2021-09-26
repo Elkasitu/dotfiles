@@ -8,13 +8,16 @@
 # Environment variables
 export XDG_CONFIG_HOME="$HOME/.config"
 export GPG_TTY=$(tty)
+export GEM_HOME="$(ruby -e 'puts Gem.user_dir')"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/scripts:$HOME/src/odoo:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$PATH:$GEM_HOME/bin"
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 export FZF_DEFAULT_OPTS="--bind ctrl-a:select-all;ctrl-d:deselect-all;ctrl-t:toggle-all"
 export FZF_DEFAULT_COMMAND="fd --type f"
-export LC_ALL="en_GB.UTF-8"
+export LC_ALL="en_US.UTF-8"
 export EDITOR=nvim
 export VISUAL=nvim
 export _JAVA_AWT_WM_NONREPARENTING=1
@@ -31,8 +34,7 @@ stty -ixon
 
 # Aliases
 alias ls='ls --color=auto'
-# TODO: bootstrap nvim
-alias vim='nvim'
+alias storyboom='yarn storybook'
 
 # Colored manpages
 man() {
@@ -67,9 +69,10 @@ if [ "$TERM" = "linux" ]; then
 fi
 
 # Load pyenv and pyenv-virtualenv
-if command -v pyenv 1>/dev/null 2>&1; then
-    eval "$(pyenv init -)"
+if [[ -x "$(command -v pyenv)" ]]; then
+    eval "$(pyenv init --path)"
     eval "$(pyenv virtualenv-init -)"
+    eval "$(pyenv init -)"
 else
     # Install if not installed
     echo "Installing pyenv and pyenv-virtualenv"
@@ -81,7 +84,6 @@ fi
 
 # Display managers are for losers
 if [[ ! ${DISPLAY} && ${XDG_VTNR} == 1 ]]; then
-    # TODO: replace by xinit?
 	exec startx
 fi
 

@@ -38,5 +38,11 @@
 "lock.sh"
     Mod4 + BackSpace
 
-"screenshot.sh"
+"flameshot gui"
     Print
+
+"xbacklight -inc 10"
+    XF86MonBrightnessUp
+
+"xbacklight -dec 10"
+    XF86MonBrightnessDown
